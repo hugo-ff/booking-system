@@ -33,6 +33,8 @@ const DropdownSelect = ({ options, placeholder, selectType, setSelectionData, se
 			size="lg"
 			value={selected}
 			onChange={e => handleChange(e)}
+			mt={2}
+			mb={2}
 		>
 			{renderOptions}
 		</Select>
