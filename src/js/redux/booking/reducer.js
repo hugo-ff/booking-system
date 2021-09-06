@@ -2,7 +2,7 @@ import types from './types';
 
 const initialState = {
 	gradesData: {},
-	isLoading: false,
+	isLoading: true,
 };
 
 const booking = (state = initialState, { type, payload }) => {
