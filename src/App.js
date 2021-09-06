@@ -1,3 +1,10 @@
-const App = () => <div>A simple booking app made with React</div>;
+import MainLayout from 'layouts/MainLayout';
+import Home from 'pages/Home';
+
+const App = () => (
+	<MainLayout>
+		<Home />
+	</MainLayout>
+);
 
 export default App;
