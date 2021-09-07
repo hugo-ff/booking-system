@@ -1,7 +1,6 @@
 import axios from 'axios';
+import { API_URL } from 'js/constants';
 import { setLoading, getGradesData } from './actions';
-
-const API_URL = 'https://static.healthforcego.com/grades.json';
 
 const getBookingData = () => async dispatch => {
 	try {

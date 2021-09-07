@@ -3,10 +3,11 @@ import { bool } from 'prop-types';
 import { connect } from 'react-redux';
 import Booking from 'pages/Booking';
 import Confirmation from 'pages/Confirmation';
+import Loader from 'components/Loader';
 
 const Home = ({ isLoading }) => {
 	return isLoading ? (
-		<div>Cargando...</div>
+		<Loader />
 	) : (
 		<Switch>
 			<Route path="/booking" component={Booking} />

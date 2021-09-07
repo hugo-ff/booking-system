@@ -1,35 +1,70 @@
 import { Menu, MenuButton, MenuList, MenuItem, IconButton } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import { Link } from 'react-router-dom';
+import { string } from 'prop-types';
+import { validateArray } from 'utils';
 import styles from './styles';
+import menuItems from './menuItems.json';
 
-const MENU_ITEMS = ['New Booking', 'All My Bookings', 'My Results'];
+const menuItemsRender =
+	validateArray(menuItems) &&
+	menuItems.map(({ id, href }) => {
+		return (
+			<Link to={href} key={id}>
+				<MenuItem>{id}</MenuItem>
+			</Link>
+		);
+	});
 
-const menuItemsRender = MENU_ITEMS.map((item, idx) => {
-	return <MenuItem key={idx.toString()}>{item}</MenuItem>;
-});
-
-const Navbar = () => {
+const Navbar = ({ text, buttonVariant }) => {
 	return (
 		<styles.Navbar>
 			<Menu variant="filled">
-				<MenuButton
-					as={IconButton}
-					aria-label="Options"
-					icon={<HamburgerIcon />}
-					variant="outline"
-					transition="all 0.2s"
-					borderRadius="md"
-					borderWidth="1px"
-					_hover={{ bg: 'gray.400' }}
-					_expanded={{ bg: 'blue.400' }}
-					_focus={{ boxShadow: 'outline' }}
-				/>
+				{buttonVariant === 'goBack' ? (
+					<Link to="/booking">
+						<MenuButton
+							as={IconButton}
+							aria-label="Options"
+							icon={<ChevronLeftIcon />}
+							variant="outline"
+							transition="all 0.2s"
+							borderRadius="md"
+							borderWidth="1px"
+							_hover={{ bg: 'gray.400' }}
+							_expanded={{ bg: 'blue.400' }}
+							_focus={{ boxShadow: 'outline' }}
+						/>
+					</Link>
+				) : (
+					<MenuButton
+						as={IconButton}
+						aria-label="Options"
+						icon={<HamburgerIcon />}
+						variant="outline"
+						transition="all 0.2s"
+						borderRadius="md"
+						borderWidth="1px"
+						_hover={{ bg: 'gray.400' }}
+						_expanded={{ bg: 'blue.400' }}
+						_focus={{ boxShadow: 'outline' }}
+					/>
+				)}
 				<MenuList>{menuItemsRender}</MenuList>
-				<styles.Text>Make a Booking</styles.Text>
+				<styles.Text>{text}</styles.Text>
 				<styles.SessionAvatar>MS</styles.SessionAvatar>
 			</Menu>
 		</styles.Navbar>
 	);
+};
+
+Navbar.propTypes = {
+	text: string,
+	buttonVariant: string,
+};
+
+Navbar.defaultProps = {
+	text: '',
+	buttonVariant: '',
 };
 
 export default Navbar;

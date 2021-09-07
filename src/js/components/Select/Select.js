@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Select } from '@chakra-ui/react';
 import { arrayOf, string, func, objectOf } from 'prop-types';
 import { connect } from 'react-redux';
+import { validateArray } from 'utils';
 import setSelection from '../../redux/selections/actions';
 
 const DropdownSelect = ({ options, placeholder, selectType, setSelectionData, selectedData }) => {
@@ -20,11 +21,13 @@ const DropdownSelect = ({ options, placeholder, selectType, setSelectionData, se
 		if (!placeholder) setPlaceholderText(options[0]);
 	}, [placeholder]);
 
-	const renderOptions = options.map((opt, idx) => (
-		<option key={idx.toString()} value={opt}>
-			{opt}
-		</option>
-	));
+	const renderOptions =
+		validateArray(options) &&
+		options.map((opt, idx) => (
+			<option key={idx.toString()} value={opt}>
+				{opt}
+			</option>
+		));
 
 	return (
 		<Select

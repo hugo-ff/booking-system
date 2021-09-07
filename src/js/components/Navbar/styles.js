@@ -25,6 +25,7 @@ const SessionAvatar = styled.div`
 	font-size: 12px;
 	font-weight: 700;
 	padding: 2px;
+	margin-right: 10px;
 `;
 
 export default { Text, Navbar, SessionAvatar };
