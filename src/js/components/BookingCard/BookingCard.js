@@ -1,13 +1,13 @@
-import { Radio } from '@chakra-ui/react';
+import { Radio, Stack } from '@chakra-ui/react';
 import { string, bool, func, shape } from 'prop-types';
+import { DEFAULT_USER_IMAGE_URL } from 'js/constants';
 import styles from './styles';
 
-const BookingCard = ({ imageUrl, name, hours, isAvailable, id, datesToShow, setBookingData }) => {
-	const imgUrl = isAvailable ? imageUrl : 'https://randomuser.me/api/portraits/lego/1.jpg';
-	const staffText = isAvailable ? `${name} is available` : 'Suitable staff member will be assigned';
+const BookingCard = ({ imageUrl, name, hours, isAvailable, id, queryDate, setBookingData }) => {
+	const imgUrl = isAvailable ? imageUrl : DEFAULT_USER_IMAGE_URL;
+	const text = isAvailable ? `${name} is available` : 'Suitable staff member will be assigned';
 
 	const { starts, ends } = hours;
-
 	const hourRange = `${starts} - ${ends}`;
 
 	const bookingData = {
@@ -24,13 +24,15 @@ const BookingCard = ({ imageUrl, name, hours, isAvailable, id, datesToShow, setB
 		<styles.BookingCard>
 			<styles.UserImage src={imgUrl} />
 			<styles.ColumnContainer>
-				<styles.Date>{datesToShow}</styles.Date>
-				<styles.Text isAvailable={isAvailable}>{staffText}</styles.Text>
+				<styles.Date>{queryDate}</styles.Date>
+				<styles.Text isAvailable={isAvailable}>{text}</styles.Text>
 			</styles.ColumnContainer>
-			<styles.ColumnContainerRight>
-				<styles.Hours>{hourRange}</styles.Hours>
-				<Radio value={id} onChange={handleOnChange} />
-			</styles.ColumnContainerRight>
+			<Stack>
+				<styles.ColumnContainerRight>
+					<styles.Hours>{hourRange}</styles.Hours>
+					<Radio value={`${id}${queryDate}`} onChange={handleOnChange} />
+				</styles.ColumnContainerRight>
+			</Stack>
 		</styles.BookingCard>
 	);
 };
@@ -41,7 +43,7 @@ BookingCard.propTypes = {
 	hours: shape({ starts: string, ends: string }),
 	isAvailable: bool,
 	id: string,
-	datesToShow: string,
+	queryDate: string,
 	setBookingData: func,
 };
 
@@ -51,7 +53,7 @@ BookingCard.defaultProps = {
 	hours: {},
 	isAvailable: false,
 	id: '',
-	datesToShow: '',
+	queryDate: '',
 	setBookingData: () => {},
 };
 

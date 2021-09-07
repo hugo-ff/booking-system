@@ -2,25 +2,27 @@ import styled, { css } from 'styled-components';
 
 const BookingCard = styled.div`
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
 	align-items: center;
 	width: 100%;
 	height: 80px;
 	border: 2px solid #616161;
 	margin: 5px auto;
+	padding: 0 10px;
 `;
 
 const UserImage = styled.img`
 	border-radius: 50%;
 	width: 45px;
 	height: 45px;
-	margin: 0 5px;
+	margin-right: 15px;
 `;
 
 const ColumnContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-bottom: 10px;
+	flex-grow: 1;
 `;
 
 const ColumnContainerRight = styled(ColumnContainer)(css`

@@ -1,4 +1,4 @@
-import { arrayOf, objectOf, string } from 'prop-types';
+import { arrayOf, objectOf, string, oneOfType } from 'prop-types';
 import { connect } from 'react-redux';
 import { Checkbox, useToast } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
@@ -65,7 +65,7 @@ const Booking = ({ gradesData, selectedData, selectedDates }) => {
 Booking.propTypes = {
 	gradesData: arrayOf(string),
 	selectedData: objectOf(string),
-	selectedDates: arrayOf(string),
+	selectedDates: arrayOf(oneOfType([string || Date])),
 };
 
 Booking.defaultProps = {

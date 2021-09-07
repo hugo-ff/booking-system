@@ -47,8 +47,8 @@ const BookingsContainer = styled.div`
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	padding: 5px;
 	overflow-y: auto;
+	flex-grow: 1;
 `;
 
 const Title = styled.h1`

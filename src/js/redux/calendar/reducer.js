@@ -1,7 +1,7 @@
 import types from './types';
 
 const initialState = {
-	selectedDates: {},
+	selectedDates: [],
 };
 
 const datesSelection = (state = initialState, { type, payload }) => {

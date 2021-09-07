@@ -8,23 +8,30 @@ import Loader from 'components/Loader';
 import Navbar from 'components/Navbar';
 import Button from 'components/Button';
 import BookingCard from 'components/BookingCard';
+import { validateArray } from 'utils';
 import { setBooking } from '../../redux/confirmation/actions';
 import getHealthStaffData from '../../redux/confirmation/operations';
 import store from '../../redux/store';
 import styles from './styles';
-import filterByUserSettings from './utils';
+import findByUserPreferences from './utils';
 
 store.dispatch(getHealthStaffData());
 
-const Confirmation = ({ healthProfessionals, isLoading, selectedData, dates, setAppointment }) => {
+const Confirmation = ({
+	healthProfessionals,
+	isLoading,
+	selectedData,
+	selectedDates,
+	setAppointment,
+}) => {
 	const [radioSelected, setRadioSelected] = useState([]);
 	const [bookingData, setBookingData] = useState({});
 	const toast = useToast();
 	const history = useHistory();
 
 	const handleConfirmation = () => {
-		const { name, starts, ends } = bookingData;
-		const successMessage = `You have a booking with ${name} on [insertarDia] between ${starts} and ${ends}.`;
+		const { name, starts, ends, queryDate } = bookingData;
+		const successMessage = `You have a booking with ${name} on ${queryDate} between ${starts} and ${ends}.`;
 		toast({
 			title: 'Booking confirmed.',
 			description: successMessage,
@@ -41,35 +48,27 @@ const Confirmation = ({ healthProfessionals, isLoading, selectedData, dates, set
 		console.log('Success!', successMessage, 'Booking Data:', bookingData);
 	};
 
-	const bookings = filterByUserSettings(healthProfessionals, selectedData, dates);
+	const matches = findByUserPreferences(healthProfessionals, selectedData, selectedDates);
 
-	const bookingsRender = bookings.map(b => {
-		const formattedDates = dates.map(date => date.toString().substring(0, 15));
-
-		const matchedDates = formattedDates.filter(date =>
-			b.days.find(day => date.toString().includes(day))
-		);
-
-		const datesToShow = matchedDates.join(', ');
-
-		return (
-			<BookingCard key={b.id} {...b} datesToShow={datesToShow} setBookingData={setBookingData} />
-		);
-	});
+	const bookingsToRender =
+		validateArray(matches) &&
+		matches.map((match, idx) => {
+			return <BookingCard key={idx.toString()} {...match} setBookingData={setBookingData} />;
+		});
 
 	return isLoading ? (
 		<Loader />
 	) : (
 		<styles.Confirmation>
 			<Navbar text="Accept Bookings" buttonVariant="goBack" />
-			{bookingsRender.length ? (
+			{bookingsToRender.length ? (
 				<styles.Wrapper>
 					<styles.RowContainer>
 						<styles.Title>Bookings to be Confirmed</styles.Title>
 					</styles.RowContainer>
 					<styles.BookingsContainer>
 						<RadioGroup onChange={setRadioSelected} value={radioSelected}>
-							{bookingsRender}
+							{bookingsToRender}
 						</RadioGroup>
 					</styles.BookingsContainer>
 					<Button width="60%" onClick={handleConfirmation}>
@@ -109,7 +108,7 @@ Confirmation.propTypes = {
 	),
 	isLoading: bool,
 	selectedData: objectOf(string),
-	dates: arrayOf(shape({})),
+	selectedDates: arrayOf(shape({})),
 	setAppointment: func,
 };
 
@@ -117,7 +116,7 @@ Confirmation.defaultProps = {
 	healthProfessionals: [],
 	isLoading: false,
 	selectedData: {},
-	dates: [],
+	selectedDates: [],
 	setAppointment: () => {},
 };
 
@@ -125,7 +124,7 @@ const mapStateToProps = ({ confirmation, selections, calendar }) => ({
 	healthProfessionals: confirmation.healthProfessionals,
 	isLoading: confirmation.isLoading,
 	selectedData: selections.selectionsData,
-	dates: calendar.selectedDates,
+	selectedDates: calendar.selectedDates,
 });
 
 const mapDispatchToProps = dispatch => ({

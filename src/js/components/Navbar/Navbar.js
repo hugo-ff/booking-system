@@ -2,24 +2,44 @@ import { Menu, MenuButton, MenuList, MenuItem, IconButton } from '@chakra-ui/rea
 import { HamburgerIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { string } from 'prop-types';
+import { validateArray } from 'utils';
 import styles from './styles';
+import menuItems from './menuItems.json';
 
-const MENU_ITEMS = ['New Booking', 'All My Bookings', 'My Results'];
-// const MENU_ITEMS = ['New Booking', 'All My Bookings', 'My Results'];
-
-const menuItemsRender = MENU_ITEMS.map((item, idx) => {
-	return <MenuItem key={idx.toString()}>{item}</MenuItem>;
-});
+const menuItemsRender =
+	validateArray(menuItems) &&
+	menuItems.map(({ id, href }) => {
+		return (
+			<Link to={href} key={id}>
+				<MenuItem>{id}</MenuItem>
+			</Link>
+		);
+	});
 
 const Navbar = ({ text, buttonVariant }) => {
 	return (
 		<styles.Navbar>
 			<Menu variant="filled">
-				<Link to={buttonVariant === 'goBack' && '/booking'}>
+				{buttonVariant === 'goBack' ? (
+					<Link to="/booking">
+						<MenuButton
+							as={IconButton}
+							aria-label="Options"
+							icon={<ChevronLeftIcon />}
+							variant="outline"
+							transition="all 0.2s"
+							borderRadius="md"
+							borderWidth="1px"
+							_hover={{ bg: 'gray.400' }}
+							_expanded={{ bg: 'blue.400' }}
+							_focus={{ boxShadow: 'outline' }}
+						/>
+					</Link>
+				) : (
 					<MenuButton
 						as={IconButton}
 						aria-label="Options"
-						icon={buttonVariant === 'goBack' ? <ChevronLeftIcon /> : <HamburgerIcon />}
+						icon={<HamburgerIcon />}
 						variant="outline"
 						transition="all 0.2s"
 						borderRadius="md"
@@ -28,7 +48,7 @@ const Navbar = ({ text, buttonVariant }) => {
 						_expanded={{ bg: 'blue.400' }}
 						_focus={{ boxShadow: 'outline' }}
 					/>
-				</Link>
+				)}
 				<MenuList>{menuItemsRender}</MenuList>
 				<styles.Text>{text}</styles.Text>
 				<styles.SessionAvatar>MS</styles.SessionAvatar>

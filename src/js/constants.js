@@ -101,3 +101,5 @@ export const HOURS = [
 	'19:00',
 	'19:30',
 ];
+
+export const DEFAULT_USER_IMAGE_URL = 'https://randomuser.me/api/portraits/lego/1.jpg';
