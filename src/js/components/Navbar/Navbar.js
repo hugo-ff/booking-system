@@ -5,6 +5,7 @@ import { string } from 'prop-types';
 import styles from './styles';
 
 const MENU_ITEMS = ['New Booking', 'All My Bookings', 'My Results'];
+// const MENU_ITEMS = ['New Booking', 'All My Bookings', 'My Results'];
 
 const menuItemsRender = MENU_ITEMS.map((item, idx) => {
 	return <MenuItem key={idx.toString()}>{item}</MenuItem>;

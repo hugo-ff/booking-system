@@ -6,6 +6,14 @@ const Confirmation = styled.div`
 	height: 100%;
 `;
 
+const SpinnerContainer = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+`;
+
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -49,4 +57,12 @@ const Title = styled.h1`
 	font-weight: 700;
 `;
 
-export default { Confirmation, Wrapper, ChatIconContainer, RowContainer, BookingsContainer, Title };
+export default {
+	SpinnerContainer,
+	Confirmation,
+	Wrapper,
+	ChatIconContainer,
+	RowContainer,
+	BookingsContainer,
+	Title,
+};

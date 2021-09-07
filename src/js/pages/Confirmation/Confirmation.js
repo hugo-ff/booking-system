@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { arrayOf, shape, bool, string, objectOf, func } from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { ChatIcon } from '@chakra-ui/icons';
-import { Spinner, RadioGroup, useToast } from '@chakra-ui/react';
+import { RadioGroup, useToast } from '@chakra-ui/react';
 import { connect } from 'react-redux';
+import Loader from 'components/Loader';
 import Navbar from 'components/Navbar';
 import Button from 'components/Button';
 import BookingCard from 'components/BookingCard';
@@ -57,28 +58,37 @@ const Confirmation = ({ healthProfessionals, isLoading, selectedData, dates, set
 	});
 
 	return isLoading ? (
-		<Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+		<Loader />
 	) : (
 		<styles.Confirmation>
 			<Navbar text="Accept Bookings" buttonVariant="goBack" />
-			<styles.Wrapper>
-				<styles.RowContainer>
-					<styles.Title>Bookings to be Confirmed</styles.Title>
-				</styles.RowContainer>
-				<styles.BookingsContainer>
-					<RadioGroup onChange={setRadioSelected} value={radioSelected}>
-						{bookingsRender}
-					</RadioGroup>
-				</styles.BookingsContainer>
-				{!!bookingsRender.length && (
+			{bookingsRender.length ? (
+				<styles.Wrapper>
+					<styles.RowContainer>
+						<styles.Title>Bookings to be Confirmed</styles.Title>
+					</styles.RowContainer>
+					<styles.BookingsContainer>
+						<RadioGroup onChange={setRadioSelected} value={radioSelected}>
+							{bookingsRender}
+						</RadioGroup>
+					</styles.BookingsContainer>
 					<Button width="60%" onClick={handleConfirmation}>
 						CONFIRM BOOKINGS
 					</Button>
-				)}
-				<styles.ChatIconContainer>
-					<ChatIcon w={10} h={10} m={2} />
-				</styles.ChatIconContainer>
-			</styles.Wrapper>
+					<styles.ChatIconContainer>
+						<ChatIcon w={10} h={10} m={2} />
+					</styles.ChatIconContainer>
+				</styles.Wrapper>
+			) : (
+				toast({
+					title: 'Empty search.',
+					description: 'There are not coincidences with your search, please try again.',
+					status: 'warning',
+					duration: 9000,
+					isClosable: true,
+					onCloseComplete: () => history.push('/booking'),
+				})
+			)}
 		</styles.Confirmation>
 	);
 };
