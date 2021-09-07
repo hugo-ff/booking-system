@@ -29,6 +29,7 @@ const Calendar = ({ setSelectedDates }) => {
 	return (
 		<DayPicker
 			selectedDays={selectedDays}
+			fixedWeeks
 			onDayClick={handleDayClick}
 			disabledDays={[new Date(2021, 9, 6), { daysOfWeek: [0, 7] }]}
 		/>

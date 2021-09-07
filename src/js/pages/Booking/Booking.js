@@ -16,7 +16,7 @@ const Booking = ({ gradesData, selectedData }) => {
 
 	return (
 		<>
-			<Navbar />
+			<Navbar text="Make a Booking" />
 			<styles.BookingContainer>
 				<styles.RowContainer>
 					<styles.Title>Book from Scratch</styles.Title>
@@ -37,7 +37,7 @@ const Booking = ({ gradesData, selectedData }) => {
 				<Calendar />
 			</styles.BookingContainer>
 			<Link to="/confirmation">
-				<Button width="100%">Create Bookings</Button>
+				<Button width="100%">CREATE BOOKINGS</Button>
 			</Link>
 		</>
 	);
@@ -58,6 +58,4 @@ const mapStateToProps = ({ booking, selections }) => ({
 	selectedData: selections.selectionsData,
 });
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Booking);
+export default connect(mapStateToProps, () => ({}))(Booking);
