@@ -16,6 +16,7 @@ const BookingCard = ({ imageUrl, name, hours, isAvailable, id, queryDate, setBoo
 		imageUrl,
 		starts,
 		ends,
+		queryDate,
 	};
 
 	const handleOnChange = () => setBookingData(bookingData);
@@ -30,7 +31,7 @@ const BookingCard = ({ imageUrl, name, hours, isAvailable, id, queryDate, setBoo
 			<Stack>
 				<styles.ColumnContainerRight>
 					<styles.Hours>{hourRange}</styles.Hours>
-					<Radio value={`${id}${queryDate}`} onChange={handleOnChange} />
+					<Radio value={`${id}${queryDate}`} onChange={handleOnChange} isDisabled={!isAvailable} />
 				</styles.ColumnContainerRight>
 			</Stack>
 		</styles.BookingCard>
