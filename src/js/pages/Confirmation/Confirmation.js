@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { arrayOf, shape, bool, string, objectOf } from 'prop-types';
+import { arrayOf, shape, bool, string, objectOf, func } from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { ChatIcon } from '@chakra-ui/icons';
-import { Spinner } from '@chakra-ui/react';
+import { Spinner, RadioGroup, useToast } from '@chakra-ui/react';
 import { connect } from 'react-redux';
 import Navbar from 'components/Navbar';
 import Button from 'components/Button';
 import BookingCard from 'components/BookingCard';
+import { setBooking } from '../../redux/confirmation/actions';
 import getHealthStaffData from '../../redux/confirmation/operations';
 import store from '../../redux/store';
 import styles from './styles';
@@ -13,56 +15,44 @@ import filterByUserSettings from './utils';
 
 store.dispatch(getHealthStaffData());
 
-const Confirmation = ({ healthProfessionals, isLoading, selectedData, dates }) => {
-	const [selectedBooking, setSelectedBooking] = useState([]);
-
-	const handleSelect = el => {
-		if (Object.values(el)[0]) return setSelectedBooking([...selectedBooking, el]);
-		const updatedBooking = selectedBooking.filter(sb => Object.keys(sb)[0] !== Object.keys(el)[0]);
-		return setSelectedBooking(updatedBooking);
-	};
+const Confirmation = ({ healthProfessionals, isLoading, selectedData, dates, setAppointment }) => {
+	const [radioSelected, setRadioSelected] = useState([]);
+	const [bookingData, setBookingData] = useState({});
+	const toast = useToast();
+	const history = useHistory();
 
 	const handleConfirmation = () => {
-		console.log('selectedBooking', selectedBooking);
+		const { name, starts, ends } = bookingData;
+		const successMessage = `You have a booking with ${name} on [insertarDia] between ${starts} and ${ends}.`;
+		toast({
+			title: 'Booking confirmed.',
+			description: successMessage,
+			status: 'success',
+			duration: 9000,
+			isClosable: true,
+			onCloseComplete: () => history.push('/booking'),
+		});
+		setAppointment({
+			successMessage,
+			healthProfessional: bookingData,
+		});
+		// eslint-disable-next-line no-console
+		console.log('Success!', successMessage, 'Booking Data:', bookingData);
 	};
 
 	const bookings = filterByUserSettings(healthProfessionals, selectedData, dates);
 
 	const bookingsRender = bookings.map(b => {
-		const {
-			isAvailable,
-			imageUrl,
-			id,
-			name,
-			hours: { starts, ends },
-			days,
-		} = b;
-
 		const formattedDates = dates.map(date => date.toString().substring(0, 15));
 
 		const matchedDates = formattedDates.filter(date =>
-			days.find(day => date.toString().includes(day))
+			b.days.find(day => date.toString().includes(day))
 		);
 
-		const hourRange = `${starts} - ${ends}`;
 		const datesToShow = matchedDates.join(', ');
 
-		const staffText = isAvailable
-			? `${name} is available`
-			: 'Suitable staff member will be assigned';
-
 		return (
-			<BookingCard
-				key={id}
-				id={id}
-				staffText={staffText}
-				imageUrl={imageUrl}
-				isAvailable={isAvailable}
-				hourRange={hourRange}
-				datesToShow={datesToShow}
-				handleSelect={handleSelect}
-				name={name}
-			/>
+			<BookingCard key={b.id} {...b} datesToShow={datesToShow} setBookingData={setBookingData} />
 		);
 	});
 
@@ -75,7 +65,11 @@ const Confirmation = ({ healthProfessionals, isLoading, selectedData, dates }) =
 				<styles.RowContainer>
 					<styles.Title>Bookings to be Confirmed</styles.Title>
 				</styles.RowContainer>
-				<styles.BookingsContainer>{bookingsRender}</styles.BookingsContainer>
+				<styles.BookingsContainer>
+					<RadioGroup onChange={setRadioSelected} value={radioSelected}>
+						{bookingsRender}
+					</RadioGroup>
+				</styles.BookingsContainer>
 				{!!bookingsRender.length && (
 					<Button width="60%" onClick={handleConfirmation}>
 						CONFIRM BOOKINGS
@@ -106,6 +100,7 @@ Confirmation.propTypes = {
 	isLoading: bool,
 	selectedData: objectOf(string),
 	dates: arrayOf(shape({})),
+	setAppointment: func,
 };
 
 Confirmation.defaultProps = {
@@ -113,6 +108,7 @@ Confirmation.defaultProps = {
 	isLoading: false,
 	selectedData: {},
 	dates: [],
+	setAppointment: () => {},
 };
 
 const mapStateToProps = ({ confirmation, selections, calendar }) => ({
@@ -122,6 +118,10 @@ const mapStateToProps = ({ confirmation, selections, calendar }) => ({
 	dates: calendar.selectedDates,
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+	setAppointment(booking) {
+		dispatch(setBooking(booking));
+	},
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Confirmation);

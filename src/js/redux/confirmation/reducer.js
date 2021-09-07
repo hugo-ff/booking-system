@@ -3,6 +3,7 @@ import types from './types';
 const initialState = {
 	healthProfessionals: [],
 	isLoading: true,
+	booking: {},
 };
 
 const confirmation = (state = initialState, { type, payload }) => {
@@ -17,6 +18,13 @@ const confirmation = (state = initialState, { type, payload }) => {
 		return {
 			...state,
 			isLoading: payload,
+		};
+	}
+
+	if (type === types.SET_BOOKING_DATA) {
+		return {
+			...state,
+			booking: payload,
 		};
 	}
 

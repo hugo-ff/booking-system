@@ -9,3 +9,8 @@ export const setLoading = payload => ({
 	type: types.SET_LOADING,
 	payload,
 });
+
+export const setBooking = payload => ({
+	type: types.SET_BOOKING_DATA,
+	payload,
+});
